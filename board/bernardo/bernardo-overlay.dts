@@ -1,22 +1,8 @@
-/* cape-CBB-Serial-r01.dts
- * Written by Alexander Hiam <hiamalexander@gmail.com>
- * for Logic Supply - http://logicsupply.com
- * Jan 28, 2014
- *
- * This is the Device Tree overlay for the CBB-Serial BeagleBone and
- * BeagleBone Black cape. It will enable the UART2, UART4 and DCAN1
- * interfaces, as well as mux GPIO1_16 for userspace control for
- * using software control of the RS485 receiver/driver enable.
- *
- * Note: the BeagleBone Black has GPIO1_16 tied to GPIO2_0 (which
- * is not exposed on the header), so this overlay muxes and controls
- * both pins.
- *
- * Copyright (c) 2014 - Logic Supply (http://logicsupply.com)
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- */
+/* cape-bernardo.dts
+* Written by Bert Outtier <outtierbert@gmail.com>
+*
+* TODO license
+*/
 /dts-v1/;
 /plugin/;
 
@@ -24,85 +10,441 @@
 #include <dt-bindings/pinctrl/am33xx.h>
 
 / {
-	compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
+    compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
 
-	/* identification */
-	part-number = "cape-CBB-Serial";
-	version = "r01";
+    /* identification */
+    part-number = "cape-bernardo";
+    version = "r00";
 
-	/* state the resources this cape uses */
-	exclusive-use =
-		/* the pin header uses */
-		"P9.15", /* GPIO1_16 */
+    /* state the resources this cape uses */
+    exclusive-use =
+    /* the pin header uses */
 
-		"P9.21", /* uart2_txd */
-		"P9.22", /* uart2_rxd */
+    /* rs485 */
+    "P9.21", /* uart2_txd */
+    "P9.22", /* uart2_rxd */
+    "P9.23", /* uart2_dir = GPIO1_17 */
 
-		"P9.13", /* uart4_txd */
-		"P9.11", /* uart4_rxd */
+    /* rs232 */
+    "P9.11", /* uart4_rxd */
+    "P9.13", /* uart4_txd */
+    "P8.33", /* uart4_rtsn */
+    "P8.35", /* uart4_ctsn */
 
-		"P9.24", /* dcan1_rx */
-		"P9.26", /* dcan1_tx */
+    /* spi */
+    "P9.28", /* spi1_cs0 */
+    "P9.29", /* spi1_d0 */
+    "P9.30", /* spi1_d1 */
+    "P9.31", /* spi1_sclk */
+    // "P9.42", /* spi1_cs1 */
 
-		/* the hardware ip uses */
-		"gpio1_16",
-		"gpio2_0",
-		"uart2",
-		"uart4",
-		"dcan1";
+    /* i2c1 */
+    "P9.17", /* i2c1_scl */
+    "P9.18", /* i2c1_sda */
 
-	fragment@0 {
-		target = <&am33xx_pinmux>;
-		__overlay__ {
-			bb_uart2_pins: pinmux_bb_uart2_pins {
-				pinctrl-single,pins = <
-					BONE_P9_21 (PIN_OUTPUT_PULLDOWN | MUX_MODE1) /* spi0_d0.uart2_txd */
-					BONE_P9_22 (PIN_INPUT_PULLUP | MUX_MODE1) /* spi0_sclk.uart2_rxd */
-				>;
-			};
+    /* i2c2 */
+    "P9.19", /* i2c2_scl */
+    "P9.20", /* i2c2_sda */
+    "P9.15", /* i2c2_cfgwp = GPIO1_16 */
+    "P9.12", /* i2c2_idwp = GPIO1_28 */
 
-			bb_uart4_pins: pinmux_bb_uart4_pins {
-				pinctrl-single,pins = <
-					BONE_P9_11 (PIN_INPUT_PULLUP | MUX_MODE6) /* gpmc_wait0.uart4_rxd_mux2 */
-					BONE_P9_13 (PIN_OUTPUT_PULLDOWN | MUX_MODE6) /* gpmc_wpn.uart4_txd_mux2 */
-					BONE_P9_15 (PIN_INPUT | MUX_MODE7) /* gpmc_a0.gpio1[16] */
-					0x088 (PIN_INPUT | MUX_MODE7) /* gpmc_csn3.gpio2[0] */
-				>;
-			};
+    /* Beaglelogic */
+    //"P8.20", /* channel 13, shared with mmc1_cmd */
+    //"P8.21", /* channel 14, shared with mmc1_clk */
+    "P8.27", /* channel 11 */
+    "P8.28", /* channel 12 */
+    "P8.29", /* channel 9 */
+    "P8.30", /* channel 10 */
+    "P8.39", /* channel 7 */
+    "P8.40", /* channel 8 */
+    "P8.41", /* channel 5 */
+    "P8.42", /* channel 6 */
+    "P8.43", /* channel 3 */
+    "P8.44", /* channel 4 */
+    "P8.45", /* channel 1 */
+    "P8.46", /* channel 2 */
 
-			bb_dcan1_pins: pinmux_dcan1_pins {
-				pinctrl-single,pins = <
-					BONE_P9_24 (PIN_INPUT_PULLUP | MUX_MODE2) /* uart1_txd.d_can1_rx */
-					BONE_P9_26 (PIN_OUTPUT_PULLUP | MUX_MODE2) /* uart1_rxd.d_can1_tx */
-				>;
-			};
-		};
-	};
+    /* can1 */
+    //"P9.24", /* dcan1_rx */
+    //"P9.26", /* dcan1_tx */
 
-	fragment@1 {
-		target = <&uart2>;
-		__overlay__ {
-			status = "okay";
-			pinctrl-names = "default";
-			pinctrl-0 = <&bb_uart2_pins>;
-		};
-	};
+    /* the hardware it uses */
+    "pru0",
+    "pru1",
+    "gpio1_16",
+    "gpio1_17",
+    "gpio1_28",
+    "uart2",
+    "uart4",
+    "i2c1",
+    "i2c2",
+    "spi1",
+    //"dcan1"
+    ;
 
-	fragment@2 {
-		target = <&uart4>;
-		__overlay__ {
-			status = "okay";
-			pinctrl-names = "default";
-			pinctrl-0 = <&bb_uart4_pins>;
-		};
-	};
+    fragment@0 {
+        target = <&am33xx_pinmux>;
+        __overlay__ {
+            bb_uart2_pins: pinmux_bb_uart2_pins {
+                pinctrl-single,pins = <
+                BONE_P9_21 (PIN_OUTPUT_PULLDOWN | MUX_MODE1) /* spi0_d0.uart2_txd */
+                BONE_P9_22 (PIN_INPUT_PULLUP | MUX_MODE1) /* spi0_sclk.uart2_rxd */
+                BONE_P9_23 (PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpio */
+                >;
+            };
 
-	fragment@3 {
-		target = <&dcan1>;
-		__overlay__ {
-			status = "okay";
-			pinctrl-names = "default";
-			pinctrl-0 = <&bb_dcan1_pins>;
-		};
-	};
+            bb_uart4_pins: pinmux_bb_uart4_pins {
+                pinctrl-single,pins = <
+                BONE_P9_11 (PIN_INPUT_PULLUP | MUX_MODE6) /* gpmc_wait0.uart4_rxd_mux2 */
+                BONE_P9_13 (PIN_OUTPUT_PULLDOWN | MUX_MODE6) /* gpmc_wpn.uart4_txd_mux2 */
+                BONE_P8_33 (PIN_OUTPUT | MUX_MODE6) /* rts */
+                BONE_P8_35 (PIN_INPUT | MUX_MODE6) /* cts */
+                >;
+            };
+
+            bb_i2c1_pins: pinmux_bb_i2c1_pins {
+                pinctrl-single,pins = <
+                BONE_P9_18 0x72	// spi0_d1.i2c1_sda, SLEWCTRL_SLOW | INPUT_PULLUP | MODE2
+                BONE_P9_17 0x72	// spi0_cs0.i2c1_scl, SLEWCTRL_SLOW | INPUT_PULLUP | MODE2
+                >;
+            };
+
+            bb_i2c2_pins: pinmux_bb_i2c2_pins {
+                pinctrl-single,pins = <
+                BONE_P9_20 0x73	/* i2c2_sda, SLEWCTRL_SLOW | INPUT_PULLUP | MODE3 */
+                BONE_P9_19 0x73	/* i2c2_scl, SLEWCTRL_SLOW | INPUT_PULLUP | MODE3 */
+                >;
+            };
+
+            bb_spi1_pins: pinmux_bb_spi1_pins {
+                pinctrl-single,pins = <
+                BONE_P9_31 0x33	/* mcasp0_aclkx.spi1_sclk, INPUT_PULLUP | MODE3 */
+                BONE_P9_29 0x33	/* mcasp0_fsx.spi1_d0, INPUT_PULLUP | MODE3 */
+                BONE_P9_30 0x13	/* mcasp0_axr0.spi1_d1, OUTPUT_PULLUP | MODE3 */
+                BONE_P9_31 0x13	/* mcasp0_ahclkr.spi1_cs0, OUTPUT_PULLUP | MODE3 */
+                // BONE_P9_42 0x12	/* eCAP0_in_PWM0_out.spi1_cs1 OUTPUT_PULLUP | MODE2 */
+                >;
+            };
+
+            pru_pru_pins: pinmux_pru_pru_pins {
+                pinctrl-single,pins = <
+                //	BONE_P8_20 0x2e /* gpmc_csn2.pr1_pru1_pru_r30_13, MODE6 | INPUT | PRU */
+                //	BONE_P8_21 0x2e /* gpmc_csn1.pr1_pru1_pru_r30_12, MODE6 | INPUT | PRU */
+                BONE_P8_30 0x2e  /* lcd_ac_bias_en.pr1_pru1_r31_11, MODE6 | INPUT | PRU */
+                BONE_P8_28 0x2e  /* lcd_pclk.pr1_pru1_pru_r31_10, MODE6 | INPUT | PRU */
+                BONE_P8_27 0x2e  /* lcd_vsync.pr1_pru1_pru_r31_8, MODE6 | INPUT | PRU */
+                BONE_P8_29 0x2e  /* lcd_hsync.pr1_pru1_pru_r31_9, MODE6 | INPUT | PRU */
+                BONE_P8_39 0x2e  /* lcd_data6.pr1_pru1_pru_r31_6, MODE6 | INPUT | PRU */
+                BONE_P8_40 0x2e  /* lcd_data7.pr1_pru1_pru_r31_7, MODE6 | INPUT | PRU */
+                BONE_P8_41 0x2e  /* lcd_data4.pr1_pru1_pru_r31_4, MODE6 | INPUT | PRU */
+                BONE_P8_42 0x2e  /* lcd_data5.pr1_pru1_pru_r31_5, MODE6 | INPUT | PRU */
+                BONE_P8_43 0x2e  /* lcd_data2.pr1_pru1_pru_r31_2, MODE6 | INPUT | PRU */
+                BONE_P8_44 0x2e  /* lcd_data3.pr1_pru1_pru_r31_3, MODE6 | INPUT | PRU */
+                BONE_P8_45 0x2e  /* lcd_data0.pr1_pru1_pru_r31_0, MODE6 | INPUT | PRU */
+                BONE_P8_46 0x2e  /* lcd_data1.pr1_pru1_pru_r31_1, MODE6 | INPUT | PRU */
+                >;
+            };
+        };
+    };
+
+    /* i2c1 */
+    fragment@1 {
+        target = <&i2c1>;	// i2c1 is numbered correctly
+        __overlay__ {
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&bb_i2c1_pins>;
+
+            // configuration start
+            clock-frequency = <100000>;
+
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            // add any i2c devices on the bus here
+            // commented out example of a touchscreen (taken from BB-BONE-LCD7-01-00A4)
+            /*
+            maxtouch@4a {
+                compatible = "mXT224";
+                reg = <0x4a>;
+                interrupt-parent = <&gpio4>;
+                interrupts = <19 0x0>;
+                atmel,irq-gpio = <&gpio4 19 0>;
+            };
+            */
+        };
+    };
+
+    /* i2c2 */
+    fragment@2 {
+        target = <&i2c2>;
+        __overlay__ {
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&bb_i2c2_pins>;
+
+            /* this is the configuration part */
+            clock-frequency = <100000>;
+
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            /* add any i2c devices on the bus here */
+            // commented out example of a touchscreen (taken from BB-BONE-LCD7-01-00A4) */
+            /*
+            maxtouch@4a {
+                compatible = "mXT224";
+            	reg = <0x4a>;
+                interrupt-parent = <&gpio4>;
+            	interrupts = <19 0x0>;
+            	atmel,irq-gpio = <&gpio4 19 0>;
+            };
+            */
+        };
+    };
+
+    /* rs485 - uart2 */
+    fragment@3 {
+        target = <&uart2>;
+        __overlay__ {
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&bb_uart2_pins>;
+            rs485-rts-delay = <0 0>;
+
+            rts-gpio = <&gpio1 17 1>; /*  GPIO_ACTIVE_HIGH>; */
+            rs485-rts-active-high;
+            linux,rs485-enabled-at-boot-time;
+        };
+    };
+
+    /* rs232 - uart4 */
+    fragment@4 {
+        target = <&uart4>;
+        __overlay__ {
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&bb_uart4_pins>;
+        };
+    };
+
+    /* spi */
+    fragment@5 {
+        target = <&spi1>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            status = "okay";
+            pinctrl-names = "default";
+            pinctrl-0 = <&bb_spi1_pins>;
+            ti,pio-mode; /* disable dma when used as an overlay, dma gets stuck at 160 bits... */
+
+            channel@0 {
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                compatible = "spidev";
+
+                reg = <0>;
+                spi-max-frequency = <16000000>;
+                spi-cpha;
+            };
+
+            channel@1 {
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                compatible = "spidev";
+
+                reg = <1>;
+                spi-max-frequency = <16000000>;
+            };
+        };
+    };
+
+    /* PRU Configuration */
+    fragment@6 {
+        target = <&ocp>;
+
+        __overlay__ {
+
+            /* avoid stupid warning */
+            #address-cells = <1>;
+            #size-cells = <1>;
+
+            prurproc {
+                compatible = "ti,pru-rproc";
+
+                pinctrl-names = "default";
+                pinctrl-0 = <&pru_pru_pins>;
+
+                reg = <0x4a300000 0x080000>;
+
+                status = "okay";
+
+                ti,hwmods = "pruss";
+                ti,deassert-hard-reset = "pruss", "pruss";
+                interrupt-parent = <&intc>;
+
+                /* interrupts on the host */
+                interrupts = <20 21 22 23 24 25 26 27>;
+
+                /* events these interrupts map to (host interrupt) */
+                events = <2 3 4 5 6 7 8 9>;
+
+                /* PRU interrupt controller offset */
+                pintc = <0x20000>;
+
+                /* 12K Shared Data RAM global, size, local */
+                pdram = <0x10000 0x03000 0x10000>;
+
+                /*
+                * SYSEVENT ids
+                *
+                * - PRU/ARM communication
+                * PRU0_PRU1	17
+                * PRU1_PRU0	18
+                * PRU0_ARM	19
+                * PRU1_ARM	20
+                * ARM_PRU0	21
+                * ARM_PRU1	22
+                *
+                * Full SYSEVENT list
+                *
+                * parity_err_intr_pend		0
+                * pru0_r31_status_cnt16	1
+                * pru1_r31_status_cnt16	2
+                * uart_urxevt_intr_req		4
+                * uart_utxevt_intr_req		5
+                * uart_uint_intr_req		6
+                * iep_tim_cap_cmp_pend		7
+                * ecap_intr_req		15
+                * pru_mst_intr[0-15]_intr_req	16-31
+                * nirq				32 (UART1)
+                * mcasp_x_intr_pend		33 (MCASP1)
+                * mcasp_r_intr_pend		34 (MCASP1)
+                * ecap_intr_intr_pend		35 (ECAP1)
+                * ecap_intr_intr_pend		36 (ECAP2)
+                * epwm_intr_intr_pend		37 (eHRPWM2)
+                * dcan_uerr			38 (DCAN0)
+                * dcan_int1			39 (DCAN0)
+                * dcan_intr			40 (DCAN0)
+                * POINTRPEND			41 (I2C0)
+                * ecap_intr_intr_pend		42 (ECAP0)
+                * epwm_intr_intr_pend		43 (eHRPWM0)
+                * SINTERRUPTN			44 (McSPI0)
+                * eqep_intr_intr_pend		45 (eQEP0)
+                * epwm_intr_intr_pend		46 (eHRPWM1)
+                * c0_misc_pend			47 3PGSW (GEMAC)
+                * c0_tx_pend			48 3PGSW (GEMAC)
+                * c0_rx_pend			49 3PGSW (GEMAC)
+                * c0_rx_thresh_pend		50 3PGSW (GEMAC)
+                * nirq				51 (UART0)
+                * nirq				52 (UART2)
+                * gen_intr_pend		53 (ADC_TSC)
+                * mcasp_r_intr_pend		54 (McASP0)
+                * mcasp_x_intr_pend		55 (McASP1)
+                * pwm_trip_zone		56 (eHRPWM0/eHRPWM1/eHRP WM2)
+                * POINTRPEND1			57 (GPIO0)
+                * Emulation Suspend Signal	58 (Debugss)
+                * initiator_sinterrupt_q_n2	59 (Mbox0 - mail_u2_irq (mailbox interrupt for pru1))
+                * initiator_sinterrupt_q_n1	60 (Mbox0 - mail_u1_irq (mailbox interrupt for pru0))
+                * tptc_erint_pend_po		61 (TPTC0 (EDMA))
+                * tpcc_errint_pend_po		62 (TPCC (EDMA))
+                * tpcc_int_pend_po1		63 (TPCC (EDMA))
+                *
+                * HOST interrupt ids
+                *
+                * PRU0		0
+                * PRU1		1
+                * EVTOUT0-7	2-9
+                */
+
+                /* sysevent map to intc channel */
+                sysevent-to-channel-map =
+                <17 1>,	/* PRU0_PRU1 -> CH1 */
+                <18 0>,	/* PRU1_PRU0 -> CH0 */
+                <19 2>,	/* PRU0_ARM  -> CH2 */
+                <20 3>,	/* PRU1_ARM  -> CH3 */
+                <21 0>,	/* ARM_PRU0  -> CH0 */
+                <22 1>,	/* ARM_PRU1  -> CH1 */
+                <24 4>,	/* VRING Host->PRU0 -> CH4 */
+                <25 5>, /* VRING PRU0->Host -> CH5 */
+                <26 6>, /* VRING Host->PRU1 -> CH6 */
+                <27 7>; /* VRING PRU1->Host -> CH7 */
+
+                /* channel to host interrupt map */
+                channel-to-host-interrupt-map =
+                <0 0>,	/* CH0 -> PRU0	  */
+                <1 1>,	/* CH1 -> PRU1    */
+                <2 2>,	/* CH2 -> EVTOUT0 */
+                <3 3>,	/* CH3 -> EVTOUT1 */
+                <4 0>,  /* CH4 -> PRU0    */
+                <5 6>,	/* CH5 -> EVTOUT4 */
+                <6 1>,  /* CH6 -> PRU1    */
+                <7 7>;  /* CH7 -> EVTOUT5 */
+
+                /* indices are ARM=0, PRU0=1, PRU1=2 */
+                target-to-sysevent-map =
+                <0xffffffff         21         22>,	/* ARM:  DONTCARE, ARM_PRU0,  ARM_PRU1  */
+                <        19 0xffffffff         17>,	/* PRU0: PRU0_ARM, DONTCARE,  PRU0_PRU1 */
+                <        20         18 0xffffffff>;	/* PRU1: PRU1_ARM, PRU1_PRU0, DONTCARE  */
+
+                /* both the PRUs have 200MHz frequency so period is 5ns */
+                clock-freq = <200000000>;
+
+                /* Enable BeagleLogic extensions to the rproc driver */
+                pru-beaglelogic-enabled;
+
+                /* Add default settings for the LA core */
+                pru-beaglelogic {
+                    compatible = "beaglelogic,beaglelogic";
+                    samplerate = <50000000>;	/* 100MHz, 50MHz, 40MHz, 25MHz, 20MHz, 10MHz, 5MHz, 1MHz : (200 / int n) MHz */
+                    sampleunit = <1>;		/* Sample byte count: 1 or 2 bytes */
+                    triggerflags = <0>; 		/* RFU for further firmware revisions */
+                };
+
+                /* PRU0 - psuedo-DMA controller */
+                pru0 {
+                    pru-index = <0>;
+
+                    /* offset, size, local */
+                    iram = <0x34000 0x02000 0x00000>;		/* code ram (8K) */
+
+                    /* offset, size, local, other */
+                    dram = <0x00000 0x02000 0x00000 0x10000>;	/* data ram (8K) */
+
+                    pctrl = <0x22000>;
+                    pdbg  = <0x22400>;
+
+                    /* sysevents signaling ring activity (host, pru)*/
+                    vring-sysev = <24 25>;
+
+                    firmware-elf;
+                    firmware = "beaglelogic-pru0-fw";
+                };
+
+                /* PRU1 - data capture */
+                pru1 {
+                    pru-index = <1>;
+
+                    /* offset, size, local */
+                    iram = <0x38000 0x02000 0x00000>;		/* code ram (8K) */
+
+                    /* offset, size, local, other */
+                    dram = <0x02000 0x02000 0x00000 0x10000>;	/* data ram (8K) */
+
+                    pctrl = <0x24000>;
+                    pdbg  = <0x24400>;
+
+                    /* sysevents signaling ring activity (host, pru)*/
+                    vring-sysev = <26 27>;
+
+                    firmware-elf;
+                    firmware = "beaglelogic-pru1-fw";
+                };
+            };
+        };
+    };
 };
