@@ -1,0 +1,1 @@
+source "$BR2_EXTERNAL_BERNARDO_PATH/package/beaglelogic/Config.in"

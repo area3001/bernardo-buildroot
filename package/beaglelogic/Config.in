@@ -1,0 +1,6 @@
+config BR2_PACKAGE_BEAGLELOGIC
+	bool "beaglelogic"
+    select BR2_PACKAGE_HOST_TI_CGT_PRU
+    select BR2_PACKAGE_HOST_PRU_SOFTWARE_SUPPORT
+	help
+	  Beaglelogic
