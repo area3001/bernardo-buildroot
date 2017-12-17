@@ -24,14 +24,14 @@ function make_real_dir
 # copy a clean uEnv.txt to the output/images directory
 cp ${BOARD_DIR}/uEnv.txt $BINARIES_DIR/uEnv.txt
 
+# clean the tmp folder for dtbo
+rm -rf ${BINARIES_DIR}/overlays-tmp
 mkdir -p ${BINARIES_DIR}/overlays-tmp
 
-# compile and copy self-defined overlays
+# compile and copy self-defined dt overlays
 DTC=`ls ${BUILD_DIR}/linux-*/scripts/dtc/dtc | head -n1`
 CPP=${HOST_DIR}/bin/arm-linux-cpp
-LINUX_INCLUDE=`echo ${BUILD_DIR}/linux-*/include | head -n1 | awk '{print $1;}'`
-
-rm -rf ${BINARIES_DIR}/overlays-tmp/*
+LINUX_INCLUDE=`echo ${BUILD_DIR}/linux-*/include | awk '{print $1;}'`
 
 if ! [ -x $DTC ]; then
 	DTC=dtc

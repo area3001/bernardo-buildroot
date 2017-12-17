@@ -13,8 +13,8 @@
     compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,beaglebone-green";
 
     /* identification */
-    part-number = "cape-bernardo";
-    version = "r00";
+    part-number = "bernardo";
+    version = "00A0";
 
     /* state the resources this cape uses */
     exclusive-use =

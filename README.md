@@ -26,7 +26,7 @@ Use the option ```BR2_JLEVEL=<number>``` to set the ```J=<number>``` for make. T
 
 ## TODO
 * define the device tree for the bernardo cape
-* Optimize the kernel defconfig
+* Optimize the kernel config
 * Configure sigrok
 * Add startup scripts and udev rules
 * Documentation
