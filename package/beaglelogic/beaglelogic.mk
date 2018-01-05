@@ -38,5 +38,5 @@ define BEAGLELOGIC_INSTALL_TARGET_CMDS
 	$(BEAGLELOGIC_INSTALL_UDEV_CMDS)
 endef
 
-$(eval $(kernel-module))
+# $(eval $(kernel-module))
 $(eval $(generic-package))

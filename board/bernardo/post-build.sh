@@ -45,7 +45,6 @@ for DTS in ${BOARD_DIR}/*-overlay.dts; do
     $CPP -nostdinc -I${LINUX_INCLUDE} -undef -x assembler-with-cpp $DTS > ${BINARIES_DIR}/overlays-tmp/${DTSNAME}.tmp.dts
     $DTC -@ -O dtb ${BINARIES_DIR}/overlays-tmp/${DTSNAME}.tmp.dts -o ${BINARIES_DIR}/overlays-tmp/${DTSNAME}.dtbo
     cp ${BINARIES_DIR}/overlays-tmp/${DTSNAME}.dtbo ${TARGET_DIR}/lib/firmware/${DTSNAME}.dtbo
-    echo "dtb_overlay=/lib/firmware/${DTSNAME}.dtbo" >> $BINARIES_DIR/uEnv.txt
 done
 
 # test for some key directories under rund
