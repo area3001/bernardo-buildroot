@@ -1,19 +1,19 @@
-From 3a30823fe27bd6739c92ddbd970a8f8b1e9068db Mon Sep 17 00:00:00 2001
+From f3dcb949112606b65d643708b07c73682b41113f Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Wed, 6 Dec 2017 14:55:08 -0600
+Date: Tue, 9 Jan 2018 14:34:40 -0600
 Subject: [PATCH 2/2] U-Boot: BeagleBone Cape Manager
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/mach-omap2/am33xx/clock_am33xx.c |   1 +
- board/ti/am335x/board.c                   | 449 ++++++++++++++++++++++++++++++
+ board/ti/am335x/board.c                   | 420 ++++++++++++++++++++++++++++++
  board/ti/am335x/board.h                   |  17 ++
- board/ti/am335x/hash-string.h             |  59 ++++
- board/ti/am335x/mux.c                     |  15 +
- include/configs/ti_armv7_common.h         | 189 +++++++++++++
+ board/ti/am335x/hash-string.h             |  59 +++++
+ board/ti/am335x/mux.c                     |  15 ++
+ include/configs/ti_armv7_common.h         | 189 ++++++++++++++
  include/configs/ti_armv7_omap.h           |   3 +
- include/environment/ti/mmc.h              |  15 +
- 8 files changed, 748 insertions(+)
+ include/environment/ti/mmc.h              |  15 ++
+ 8 files changed, 719 insertions(+)
  create mode 100644 board/ti/am335x/hash-string.h
 
 diff --git a/arch/arm/mach-omap2/am33xx/clock_am33xx.c b/arch/arm/mach-omap2/am33xx/clock_am33xx.c
@@ -29,7 +29,7 @@ index 1780bbdb6f..a1ee457328 100644
  		&cmper->spi0clkctrl,
  		&cmrtc->rtcclkctrl,
 diff --git a/board/ti/am335x/board.c b/board/ti/am335x/board.c
-index 8a41a03e7a..96a24ce19a 100644
+index 8a41a03e7a..ef22233161 100644
 --- a/board/ti/am335x/board.c
 +++ b/board/ti/am335x/board.c
 @@ -39,6 +39,7 @@
@@ -40,7 +40,7 @@ index 8a41a03e7a..96a24ce19a 100644
  
  DECLARE_GLOBAL_DATA_PTR;
  
-@@ -76,9 +77,449 @@ void do_board_detect(void)
+@@ -76,9 +77,420 @@ void do_board_detect(void)
  	if (ti_i2c_eeprom_am_get(CONFIG_EEPROM_BUS_ADDRESS,
  				 CONFIG_EEPROM_CHIP_ADDRESS))
  		printf("ti_i2c_eeprom_init failed\n");
@@ -94,12 +94,6 @@ index 8a41a03e7a..96a24ce19a 100644
 +#define BBBW_WL1835	0x1
 +#define BBGW_WL1835	0x2
 +
-+#define BBB_GENERIC_SILICON	0x0
-+/* ES 2.0 Silcon doesnt have 1Ghz eFuse */
-+#define BBB_AM335X_2_SILICON	0x1
-+/* Octavo, ti-cpufreq, detects extra 300Mhz mode, thus disabling cpufreq */
-+#define BBB_OSD3358_SILICON	0x2
-+
 +#define CAPE_UNIVERSAL	0x0
 +#define CAPE_UNIVERSAL_BBB	0x01
 +#define CAPE_UNIVERSAL_BBG	0x02
@@ -124,7 +118,6 @@ index 8a41a03e7a..96a24ce19a 100644
 +	char virtual_video=NOT_POP;
 +	char virtual_audio=NOT_POP;
 +	char virtual_wireless=NOT_POP;
-+	char silicon=BBB_GENERIC_SILICON;
 +	char cape_universal=CAPE_UNIVERSAL;
 +	char virtual_adc=NOT_POP;
 +	char model=NOT_POP;
@@ -139,7 +132,6 @@ index 8a41a03e7a..96a24ce19a 100644
 +		virtual_audio=BBB_TDA998X_AUDIO;
 +		virtual_wireless=NOT_POP;
 +		virtual_adc=BBB_ADC;
-+		silicon=BBB_AM335X_2_SILICON;
 +		cape_universal=CAPE_UNIVERSAL_BBB;
 +		name = "A335BNLT";
 +
@@ -152,14 +144,12 @@ index 8a41a03e7a..96a24ce19a 100644
 +			virtual_audio=NOT_POP;
 +			virtual_wireless=NOT_POP;
 +			virtual_adc=NOT_POP;
-+			silicon=BBB_OSD3358_SILICON;
 +			cape_universal=CAPE_UNIVERSAL;
 +			name = "BBBL";
 +		}
 +		if (!strncmp(board_ti_get_rev(), "BW", 2)) {
 +			puts("Model: BeagleBoard.org BeagleBone Black Wireless:\n");
 +			virtual_wireless=BBBW_WL1835;
-+			silicon=BBB_OSD3358_SILICON;
 +			name = "BBBW";
 +		}
 +		if (!strncmp(board_ti_get_rev(), "BBG", 3)) {
@@ -167,7 +157,6 @@ index 8a41a03e7a..96a24ce19a 100644
 +			//puts("Model: SeeedStudio BeagleBone Green:\n");
 +			virtual_video=NOT_POP;
 +			virtual_audio=NOT_POP;
-+			silicon=BBB_GENERIC_SILICON;
 +			cape_universal=CAPE_UNIVERSAL_BBG;
 +			name = "BBG1";
 +			model=M_BBG1;
@@ -177,24 +166,20 @@ index 8a41a03e7a..96a24ce19a 100644
 +			virtual_video=NOT_POP;
 +			virtual_audio=NOT_POP;
 +			virtual_wireless=BBGW_WL1835;
-+			silicon=BBB_GENERIC_SILICON;
 +			cape_universal=CAPE_UNIVERSAL_BBGW;
 +		}
 +		if (!strncmp(board_ti_get_rev(), "AIA", 3)) {
 +			puts("Model: Arrow BeagleBone Black Industrial:\n");
 +			virtual_video=BBB_ADV7511_AUDIO;
 +			virtual_audio=BBB_ADV7511_AUDIO;
-+			silicon=BBB_GENERIC_SILICON;
 +			cape_universal=CAPE_UNIVERSAL;
 +		}
 +		if (!strncmp(board_ti_get_rev(), "EIA", 3)) {
 +			puts("Model: Element14 BeagleBone Black Industrial:\n");
-+			silicon=BBB_GENERIC_SILICON;
 +		}
 +		if (!strncmp(board_ti_get_rev(), "SE", 2)) {
 +			puts("Model: SanCloud BeagleBone Enhanced:\n");
 +			base_dtb=BBE_BASE_DTB;
-+			silicon=BBB_GENERIC_SILICON;
 +			cape_universal=CAPE_UNIVERSAL_BBB;
 +			name = "SBBE";
 +		}
@@ -202,17 +187,14 @@ index 8a41a03e7a..96a24ce19a 100644
 +			puts("Model: MENTOREL BeagleBone uSomIQ:\n");
 +			virtual_video=NOT_POP;
 +			virtual_audio=NOT_POP;
-+			silicon=BBB_GENERIC_SILICON;
 +			cape_universal=CAPE_UNIVERSAL_BBG;
 +		}
 +		if (!strncmp(board_ti_get_rev(), "NAD", 3)) {
 +			puts("Model: Neuromeka BeagleBone Air:\n");
-+			silicon=BBB_GENERIC_SILICON;
 +			cape_universal=CAPE_UNIVERSAL;
 +		}
 +		if (!strncmp(board_ti_get_rev(), "OS0", 3)) {
 +			puts("Model: Octavo Systems OSD3358-SM-RED:\n");
-+			silicon=BBB_OSD3358_SILICON;
 +			name = "OS00";
 +			cape_universal=NOT_POP;
 +			model=M_OS00;
@@ -227,7 +209,6 @@ index 8a41a03e7a..96a24ce19a 100644
 +		virtual_audio=NOT_POP;
 +		virtual_wireless=NOT_POP;
 +		virtual_adc=BBB_ADC;
-+		silicon=BBB_GENERIC_SILICON;
 +		cape_universal=CAPE_UNIVERSAL_BBB;
 +		name = "A335BONE";
 +	}
@@ -240,7 +221,6 @@ index 8a41a03e7a..96a24ce19a 100644
 +		virtual_audio=NOT_POP;
 +		virtual_wireless=NOT_POP;
 +		virtual_adc=BBB_ADC;
-+		silicon=BBB_GENERIC_SILICON;
 +		cape_universal=CAPE_UNIVERSAL_BBG;
 +		name = "BBG1";
 +		model=M_BBG1;
@@ -397,15 +377,6 @@ index 8a41a03e7a..96a24ce19a 100644
 +			break;
 +	}
 +
-+	switch(silicon) {
-+		case BBB_AM335X_2_SILICON:
-+			env_set("uboot_silicon", "/lib/firmware/AM335X-20-00A0.dtbo");
-+			break;
-+		case BBB_OSD3358_SILICON:
-+			env_set("uboot_silicon", "/lib/firmware/OSD3358-00A0.dtbo");
-+			break;
-+	}
-+
 +	if (virtual_emmc == BBB_EMMC) {
 +		env_set("uboot_emmc", "/lib/firmware/BB-BONE-eMMC1-01-00A0.dtbo");
 +	}
@@ -490,7 +461,7 @@ index 8a41a03e7a..96a24ce19a 100644
  #ifndef CONFIG_DM_SERIAL
  struct serial_device *default_serial_console(void)
  {
-@@ -813,6 +1254,14 @@ int board_late_init(void)
+@@ -813,6 +1225,14 @@ int board_late_init(void)
  	}
  #endif
  
@@ -652,10 +623,10 @@ index 2b10b64d3a..3733246852 100644
  		configure_module_pin_mux(mmc0_pin_mux);
  		configure_module_pin_mux(gpio0_18_pin_mux);
 diff --git a/include/configs/ti_armv7_common.h b/include/configs/ti_armv7_common.h
-index 1de766ea47..380a856592 100644
+index b5d2f8b1df..956d3c2c11 100644
 --- a/include/configs/ti_armv7_common.h
 +++ b/include/configs/ti_armv7_common.h
-@@ -359,6 +359,19 @@
+@@ -348,6 +348,19 @@
  			"echo loading ${bootdir}/${bootfile} ...; "\
  			"run loadimage;" \
  			"setenv fdtdir /boot/dtbs/${uname_r}; " \
@@ -675,7 +646,7 @@ index 1de766ea47..380a856592 100644
  			"if test -e ${devtype} ${bootpart} ${fdtdir}/${fdtfile}; then " \
  				"run loadfdt;" \
  			"else " \
-@@ -399,6 +412,182 @@
+@@ -388,6 +401,182 @@
  					"fi;" \
  				"fi;" \
  			"fi; " \
@@ -899,5 +870,5 @@ index 0364f62c3d..d48d6c2d91 100644
  		"ums 0 ${devtype} 1;\0" \
  	"envboot=mmc dev ${mmcdev}; " \
 -- 
-2.15.0
+2.15.1
 

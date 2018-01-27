@@ -1,6 +1,6 @@
-From 3f23ca49e4a0513bb6e68f4061b4f4e5ce352a82 Mon Sep 17 00:00:00 2001
+From 369405675b4ba45a43b01995381078d0d29cb9f5 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Fri, 15 Dec 2017 09:39:10 -0600
+Date: Tue, 9 Jan 2018 14:33:02 -0600
 Subject: [PATCH] am335x_evm: uEnv.txt, bootz, n fixes
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
@@ -8,14 +8,15 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  board/ti/am335x/board.c               |  120 +++-
  board/ti/am335x/board.h               |   43 +-
  board/ti/am335x/mux.c                 |   18 +-
- configs/am335x_boneblack_defconfig    |    9 +-
- configs/am335x_evm_defconfig          |   38 +-
+ configs/am335x_boneblack_defconfig    |    7 +-
+ configs/am335x_evm_defconfig          |   36 +-
  configs/am335x_pocketbeagle_defconfig | 1055 +++++++++++++++++++++++++++++++++
- include/configs/am335x_evm.h          |  112 +++-
+ fs/ext4/ext4_common.c                 |    2 +-
+ include/configs/am335x_evm.h          |  101 +++-
  include/configs/ti_am335x_common.h    |    2 +
- include/configs/ti_armv7_common.h     |  310 ++++++++++
+ include/configs/ti_armv7_common.h     |  299 ++++++++++
  include/environment/ti/mmc.h          |   67 ++-
- 10 files changed, 1694 insertions(+), 80 deletions(-)
+ 11 files changed, 1675 insertions(+), 75 deletions(-)
  create mode 100644 configs/am335x_pocketbeagle_defconfig
 
 diff --git a/board/ti/am335x/board.c b/board/ti/am335x/board.c
@@ -360,21 +361,21 @@ index ad85b3a19a..2b10b64d3a 100644
  #if defined(CONFIG_NAND) && defined(CONFIG_EMMC_BOOT)
  		configure_module_pin_mux(nand_pin_mux);
 diff --git a/configs/am335x_boneblack_defconfig b/configs/am335x_boneblack_defconfig
-index 55e0ebd69c..7bffb33067 100644
+index 50093cd662..873090a7ad 100644
 --- a/configs/am335x_boneblack_defconfig
 +++ b/configs/am335x_boneblack_defconfig
-@@ -4,7 +4,9 @@ CONFIG_TI_COMMON_CMD_OPTIONS=y
+@@ -4,8 +4,9 @@ CONFIG_TI_COMMON_CMD_OPTIONS=y
  CONFIG_AM33XX=y
  # CONFIG_SPL_NAND_SUPPORT is not set
  CONFIG_DISTRO_DEFAULTS=y
 -CONFIG_SYS_EXTRA_OPTIONS="EMMC_BOOT"
-+CONFIG_BOOTCOMMAND="if test ${boot_fit} -eq 1; then run update_to_fit; fi; run findfdt; run init_console; run envboot; run distro_bootcmd"
+ CONFIG_BOOTCOMMAND="if test ${boot_fit} -eq 1; then run update_to_fit; fi; run findfdt; run init_console; run envboot; run distro_bootcmd"
 +# CONFIG_ENV_IS_IN_FAT is not set
 +CONFIG_ENV_IS_NOWHERE=y
  CONFIG_SYS_CONSOLE_INFO_QUIET=y
  CONFIG_VERSION_VARIABLE=y
  CONFIG_ARCH_MISC_INIT=y
-@@ -19,7 +21,6 @@ CONFIG_FASTBOOT=y
+@@ -20,7 +21,6 @@ CONFIG_FASTBOOT=y
  CONFIG_CMD_SPL=y
  # CONFIG_CMD_FLASH is not set
  # CONFIG_CMD_SETEXPR is not set
@@ -382,7 +383,7 @@ index 55e0ebd69c..7bffb33067 100644
  CONFIG_DFU_TFTP=y
  CONFIG_DFU_MMC=y
  CONFIG_DFU_RAM=y
-@@ -39,6 +40,10 @@ CONFIG_USB_GADGET_VENDOR_NUM=0x0451
+@@ -40,6 +40,9 @@ CONFIG_USB_GADGET_VENDOR_NUM=0x0451
  CONFIG_USB_GADGET_PRODUCT_NUM=0xd022
  CONFIG_USB_ETHER=y
  CONFIG_USBNET_HOST_ADDR="de:ad:be:af:00:00"
@@ -392,20 +393,19 @@ index 55e0ebd69c..7bffb33067 100644
  CONFIG_OF_LIBFDT=y
  CONFIG_OF_LIBFDT_OVERLAY=y
 +CONFIG_PHY_MSCC=y
-+# CONFIG_EFI_LOADER is not set
 diff --git a/configs/am335x_evm_defconfig b/configs/am335x_evm_defconfig
-index c98a010069..7bffb33067 100644
+index 9c97009891..873090a7ad 100644
 --- a/configs/am335x_evm_defconfig
 +++ b/configs/am335x_evm_defconfig
-@@ -2,58 +2,48 @@ CONFIG_ARM=y
+@@ -2,57 +2,47 @@ CONFIG_ARM=y
  CONFIG_ARCH_OMAP2PLUS=y
  CONFIG_TI_COMMON_CMD_OPTIONS=y
  CONFIG_AM33XX=y
 -CONFIG_DEFAULT_DEVICE_TREE="am335x-evm"
 +# CONFIG_SPL_NAND_SUPPORT is not set
  CONFIG_DISTRO_DEFAULTS=y
- CONFIG_BOOTCOMMAND="if test ${boot_fit} -eq 1; then run update_to_fit; fi; run findfdt; run init_console; run envboot; run distro_bootcmd"
 -CONFIG_SPL_LOAD_FIT=y
+ CONFIG_BOOTCOMMAND="if test ${boot_fit} -eq 1; then run update_to_fit; fi; run findfdt; run init_console; run envboot; run distro_bootcmd"
 +# CONFIG_ENV_IS_IN_FAT is not set
 +CONFIG_ENV_IS_NOWHERE=y
  CONFIG_SYS_CONSOLE_INFO_QUIET=y
@@ -440,7 +440,6 @@ index c98a010069..7bffb33067 100644
 -CONFIG_DM_MMC=y
  CONFIG_MMC_OMAP_HS=y
 -CONFIG_NAND=y
--CONFIG_NAND_OMAP_GPMC_PREFETCH=y
  CONFIG_SPI_FLASH=y
  CONFIG_SPI_FLASH_WINBOND=y
  CONFIG_PHYLIB=y
@@ -469,7 +468,6 @@ index c98a010069..7bffb33067 100644
 +CONFIG_OF_LIBFDT=y
  CONFIG_OF_LIBFDT_OVERLAY=y
 +CONFIG_PHY_MSCC=y
-+# CONFIG_EFI_LOADER is not set
 diff --git a/configs/am335x_pocketbeagle_defconfig b/configs/am335x_pocketbeagle_defconfig
 new file mode 100644
 index 0000000000..d817fac61e
@@ -1531,8 +1529,21 @@ index 0000000000..d817fac61e
 +CONFIG_SMBIOS_MANUFACTURER="ti"
 +# CONFIG_EFI_LOADER is not set
 +# CONFIG_UNIT_TEST is not set
+diff --git a/fs/ext4/ext4_common.c b/fs/ext4/ext4_common.c
+index dac9545365..a8e6fdef51 100644
+--- a/fs/ext4/ext4_common.c
++++ b/fs/ext4/ext4_common.c
+@@ -2378,7 +2378,7 @@ int ext4fs_mount(unsigned part_length)
+ 
+ 	return 1;
+ fail:
+-	printf("Failed to mount ext2 filesystem...\n");
++	//printf("Failed to mount ext2 filesystem...\n");
+ 	free(data);
+ 	ext4fs_root = NULL;
+ 
 diff --git a/include/configs/am335x_evm.h b/include/configs/am335x_evm.h
-index 5ad0366730..fa6ac1af4c 100644
+index 856c546fc1..078a706676 100644
 --- a/include/configs/am335x_evm.h
 +++ b/include/configs/am335x_evm.h
 @@ -59,9 +59,14 @@
@@ -1568,7 +1579,7 @@ index 5ad0366730..fa6ac1af4c 100644
  	"fdtfile=undefined\0" \
  	"console=ttyO0,115200n8\0" \
  	"partitions=" \
-@@ -125,19 +130,78 @@
+@@ -125,11 +130,66 @@
  	"ramboot=echo Booting from ramdisk ...; " \
  		"run ramargs; " \
  		"bootz ${loadaddr} ${rdaddr} ${fdtaddr}\0" \
@@ -1605,62 +1616,55 @@ index 5ad0366730..fa6ac1af4c 100644
 +		"if test $board_name = A335BLGC; then " \
 +			"setenv fdtfile am335x-beaglelogic.dtb; fi; " \
  		"if test $board_name = A335BONE; then " \
--			"setenv fdtfile am335x-bone.dtb; fi; " \
-+			"setenv fdtfile am335x-bone.dtb; setenv fdtbase am335x-bone; fi; " \
+ 			"setenv fdtfile am335x-bone.dtb; fi; " \
  		"if test $board_name = A335BNLT; then " \
 -			"setenv fdtfile am335x-boneblack.dtb; fi; " \
 +			"echo board_rev=[$board_rev] ...; " \
 +			"if test $board_rev = GH01; then " \
-+				"setenv fdtfile am335x-boneblack.dtb; setenv fdtbase am335x-boneblack; " \
++				"setenv fdtfile am335x-boneblack.dtb; " \
 +			"elif test $board_rev = BBG1; then " \
-+				"setenv fdtfile am335x-bonegreen.dtb; setenv fdtbase am335x-bonegreen; " \
++				"setenv fdtfile am335x-bonegreen.dtb; " \
 +			"elif test $board_rev = BP00; then " \
-+				"setenv fdtfile am335x-pocketbone.dtb; setenv fdtbase am335x-pocketbone; " \
++				"setenv fdtfile am335x-pocketbone.dtb; " \
 +			"elif test $board_rev = GW1A; then " \
-+				"setenv fdtfile am335x-bonegreen-wireless.dtb; setenv fdtbase am335x-bonegreen-wireless; " \
++				"setenv fdtfile am335x-bonegreen-wireless.dtb; " \
 +			"elif test $board_rev = AIA0; then " \
-+				"setenv fdtfile am335x-abbbi.dtb; setenv fdtbase am335x-abbbi; " \
++				"setenv fdtfile am335x-abbbi.dtb; " \
 +			"elif test $board_rev = EIA0; then " \
-+				"setenv fdtfile am335x-boneblack.dtb; setenv fdtbase am335x-boneblack; " \
++				"setenv fdtfile am335x-boneblack.dtb; " \
 +			"elif test $board_rev = SE0A; then " \
-+				"setenv fdtfile am335x-sancloud-bbe.dtb; setenv fdtbase am335x-sancloud-bbe; " \
++				"setenv fdtfile am335x-sancloud-bbe.dtb; " \
 +			"elif test $board_rev = ME06; then " \
-+				"setenv fdtfile am335x-bonegreen.dtb; setenv fdtbase am335x-bonegreen; " \
++				"setenv fdtfile am335x-bonegreen.dtb; " \
 +			"elif test $board_rev = M10A; then " \
-+				"setenv fdtfile am335x-vsc8531bbb.dtb; setenv fdtbase am335x-vsc8531bbb; " \
++				"setenv fdtfile am335x-vsc8531bbb.dtb; " \
 +			"elif test $board_rev = OS00; then " \
 +				"setenv fdtfile am335x-osd3358-sm-red.dtb; " \
 +			"else " \
-+				"setenv fdtfile am335x-boneblack.dtb; setenv fdtbase am335x-boneblack; " \
++				"setenv fdtfile am335x-boneblack.dtb; " \
 +			"fi; " \
 +		"fi; " \
  		"if test $board_name = BBBW; then " \
--			"setenv fdtfile am335x-boneblack-wireless.dtb; fi; " \
-+			"setenv fdtfile am335x-boneblack-wireless.dtb; setenv fdtbase am335x-boneblack-wireless; fi; " \
+ 			"setenv fdtfile am335x-boneblack-wireless.dtb; fi; " \
  		"if test $board_name = BBG1; then " \
--			"setenv fdtfile am335x-bonegreen.dtb; fi; " \
-+			"setenv fdtfile am335x-bonegreen.dtb; setenv fdtbase am335x-bonegreen; fi; " \
- 		"if test $board_name = BBGW; then " \
--			"setenv fdtfile am335x-bonegreen-wireless.dtb; fi; " \
-+			"setenv fdtfile am335x-bonegreen-wireless.dtb; setenv fdtbase am335x-bonegreen-wireless; fi; " \
+@@ -138,6 +198,10 @@
+ 			"setenv fdtfile am335x-bonegreen-wireless.dtb; fi; " \
  		"if test $board_name = BBBL; then " \
--			"setenv fdtfile am335x-boneblue.dtb; fi; " \
-+			"setenv fdtfile am335x-boneblue.dtb; setenv fdtbase am335x-boneblue; fi; " \
+ 			"setenv fdtfile am335x-boneblue.dtb; fi; " \
 +		"if test $board_name = SBBE; then " \
-+			"setenv fdtfile am335x-sancloud-bbe.dtb; setenv fdtbase am335x-sancloud-bbe; fi; " \
++			"setenv fdtfile am335x-sancloud-bbe.dtb; fi; " \
 +		"if test $board_name = OS00; then " \
 +			"setenv fdtfile am335x-osd3358-sm-red.dtb; fi; " \
  		"if test $board_name = A33515BB; then " \
  			"setenv fdtfile am335x-evm.dtb; fi; " \
  		"if test $board_name = A335X_SK; then " \
-@@ -145,13 +209,23 @@
+@@ -145,13 +209,22 @@
  		"if test $board_name = A335_ICE; then " \
  			"setenv fdtfile am335x-icev2.dtb; fi; " \
  		"if test $fdtfile = undefined; then " \
 -			"echo WARNING: Could not determine device tree to use; fi; \0" \
 +			"setenv board_name A335BNLT; " \
 +			"setenv board_rev EMMC; " \
-+			"setenv fdtbase am335x-boneblack-emmc-overlay; " \
 +			"setenv fdtfile am335x-boneblack-emmc-overlay.dtb; " \
 +		"fi; \0" \
  	"init_console=" \
@@ -1678,7 +1682,7 @@ index 5ad0366730..fa6ac1af4c 100644
  	NANDARGS \
  	NETARGS \
  	DFUARGS \
-@@ -232,9 +306,14 @@
+@@ -232,9 +305,14 @@
  #define CONFIG_USB_MUSB_PIO_ONLY
  #define CONFIG_USB_MUSB_DISABLE_BULK_COMBINE_SPLIT
  #define CONFIG_AM335X_USB0
@@ -1694,7 +1698,7 @@ index 5ad0366730..fa6ac1af4c 100644
  
  /*
   * Disable MMC DM for SPL build and can be re-enabled after adding
-@@ -287,6 +366,17 @@
+@@ -287,6 +365,17 @@
  #define CONFIG_ENV_OFFSET_REDUND	(CONFIG_ENV_OFFSET + CONFIG_ENV_SIZE)
  #define CONFIG_SYS_REDUNDAND_ENVIRONMENT
  #define CONFIG_SYS_MMC_MAX_DEVICE	2
@@ -1727,10 +1731,10 @@ index 66cacdf347..1f4da159d9 100644
   * RTC related defines. To use bootcount you must set bootlimit in the
   * environment to a non-zero value and enable CONFIG_BOOTCOUNT_LIMIT
 diff --git a/include/configs/ti_armv7_common.h b/include/configs/ti_armv7_common.h
-index 91e139853c..1de766ea47 100644
+index 91e139853c..b5d2f8b1df 100644
 --- a/include/configs/ti_armv7_common.h
 +++ b/include/configs/ti_armv7_common.h
-@@ -129,6 +129,316 @@
+@@ -129,6 +129,305 @@
  /* Boot Argument Buffer Size */
  #define CONFIG_SYS_BARGSIZE		CONFIG_SYS_CBSIZE
  
@@ -1881,12 +1885,6 @@ index 91e139853c..1de766ea47 100644
 +					"echo Loaded environment from /uEnv.txt;" \
 +					"run importbootenv;" \
 +				"fi;" \
-+				"if test -n ${cape}; then " \
-+					"if test -e ${devtype} ${bootpart} ${fdtdir}/${fdtbase}-${cape}.dtb; then " \
-+						"setenv fdtfile ${fdtbase}-${cape}.dtb; " \
-+					"fi; " \
-+					"echo using: $fdtfile...; " \
-+				"fi; " \
 +				"echo Checking if uenvcmd is set ...;" \
 +				"if test -n ${uenvcmd}; then " \
 +					"gpio set 56; " \
@@ -1935,11 +1933,6 @@ index 91e139853c..1de766ea47 100644
 +					"load ${devtype} ${bootpart} ${loadaddr} /boot/uEnv.txt;" \
 +					"env import -t ${loadaddr} ${filesize};" \
 +					"echo Loaded environment from /boot/uEnv.txt;" \
-+					"if test -n ${cape}; then " \
-+						"echo debug: [cape=${cape}] ... ;" \
-+						"setenv fdtfile ${fdtbase}-${cape}.dtb; " \
-+						"echo Using: dtb=${fdtfile} ...;" \
-+					"fi; " \
 +					"if test -n ${dtb}; then " \
 +						"echo debug: [dtb=${dtb}] ... ;" \
 +						"setenv fdtfile ${dtb};" \
