@@ -1,6 +1,6 @@
 ################################################################################
 #
-# BeagleLogic
+# BeagleLogic firmware
 #
 ################################################################################
 BEAGLELOGIC_VERSION = master
@@ -9,9 +9,6 @@ BEAGLELOGIC_SITE_METHOD = git
 BEAGLELOGIC_DEPENDENCIES = host-ti-cgt-pru host-pru-software-support
 BEAGLELOGIC_LICENSE = GPLv2
 BEAGLELOGIC_LICENSE_FILES = LICENSE
-
-BEAGLELOGIC_MODULE_SUBDIRS = kernel
-BEAGLELOGIC_MODULE_MAKE_OPTS = KSRC=$(LINUX_DIR)
 
 define BEAGLELOGIC_BUILD_FIRMWARE_CMDS
 	$(MAKE) PRU_CGT=$(TI_CGT_PRU_INSTALLDIR) PRU_SP_PATH=$(TI_CGT_PRU_INSTALLDIR)/usr -C $(@D)/firmware all
@@ -38,5 +35,4 @@ define BEAGLELOGIC_INSTALL_TARGET_CMDS
 	$(BEAGLELOGIC_INSTALL_UDEV_CMDS)
 endef
 
-# $(eval $(kernel-module))
 $(eval $(generic-package))
