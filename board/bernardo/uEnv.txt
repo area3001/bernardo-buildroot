@@ -1,16 +1,14 @@
 bootfile=zImage
-fdtfile=am335x-boneblack-uboot.dtb
-loadaddr=0x80007fc0
-fdtaddr=0x80F80000
+fdtfile=bernardo.dtb
+loadaddr=0x82000000
+fdtaddr=88000000
 loadfdt=fatload mmc 0:1 ${fdtaddr} ${fdtfile}
 loaduimage=fatload mmc 0:1 ${loadaddr} ${bootfile}
 console=ttyS0,115200n8
 mmcroot=/dev/mmcblk0p2
 mmcrootfstype=ext4
-uenvcmd=mmc rescan; run loaduimage; run loadfdt; setenv uboot_overlay /lib/firmware/beaglelogic-00A0.dtbo; run loadoverlay; setenv uboot_overlay /lib/firmware/bernardo-00A0.dtbo; run loadoverlay;run fdtboot
+uenvcmd=mmc rescan; run loaduimage; run loadfdt; run fdtboot
 fdtboot=run mmc_args; bootz ${loadaddr} - ${fdtaddr}
 mmc_args=setenv bootargs console=${console} ${optargs} root=${mmcroot} rw
 rootfstype=${mmcrootfstype} rootwait
 optargs=bone_capemgr.uboot_capemgr_enabled=1 rootwait coherent_pool=1M net.ifnames=0
-loadoverlay=echo uboot_overlays: loading ${uboot_overlay} ...; load mmc 0:2 ${rdaddr} ${uboot_overlay}; fdt addr ${fdtaddr}; fdt resize ${fdt_buffer}; fdt apply ${rdaddr}; fdt resize ${fdt_buffer};
-fdt_buffer=0x60000
