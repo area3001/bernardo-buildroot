@@ -39,7 +39,7 @@ else
 	echo "Using $DTC"
 fi
 
-for DTS in ${BOARD_DIR}/*-overlay.dts; do
+for DTS in $(ls ${BOARD_DIR}/*-overlay.dts); do
 	DTSNAME=`basename ${DTS%%-overlay.dts}`
 	echo "Compile $DTSNAME"
     $CPP -nostdinc -I${LINUX_INCLUDE} -undef -x assembler-with-cpp $DTS > ${BINARIES_DIR}/overlays-tmp/${DTSNAME}.tmp.dts
