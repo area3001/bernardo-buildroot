@@ -1,1 +1,2 @@
 source "$BR2_EXTERNAL_BERNARDO_PATH/package/beaglelogic/Config.in"
+source "$BR2_EXTERNAL_BERNARDO_PATH/package/inputevent/Config.in"
