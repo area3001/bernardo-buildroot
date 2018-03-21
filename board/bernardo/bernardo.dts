@@ -36,7 +36,7 @@
 			label = "beaglelogic:green:user";
 			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
-			default-state = "off";
+			default-state = "on";
 		};
 
 		led@2 {
@@ -108,18 +108,17 @@
 
 	user_switch_pins: pinmux_user_switch {
 		pinctrl-single,pins = <
-			0x34 (PIN_INPUT_PULLUP | MUX_MODE7 ) /* (R12), beaglelogic user button, gpmc_ad13.gpio1[13] */
+			0x34 (PIN_INPUT_PULLUP | MUX_MODE7 ) /* (R12) gpmc_ad13.gpio1[13], beaglelogic user button */
 		>;
 	};
 
 	user_leds_pins: pinmux_user_leds {
 		pinctrl-single,pins = <
-			0x30 (PIN_OUTPUT_PULLDOWN | MUX_MODE7 ) /* (T12), beaglelogic user led, gpmc_ad12.gpio1[12] */
-			0x44 (PIN_INPUT_PULLUP | MUX_MODE7 ) /* RS485 direction, CHECK PULLUP/DOWN gpmc_a1.gpio1_17 */
-			0x54 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* beaglebone:green:heartbeat led, gpmc_a5.gpio1_21 */
-			0x58 (PIN_OUTPUT_PULLUP | MUX_MODE7)	/* beaglebone:green:mmc0 led, gpmc_a6.gpio1_22 */
-			0x5c (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* beaglebone:green:usr2 led, gpmc_a7.gpio1_23 */
-			0x60 (PIN_OUTPUT_PULLUP | MUX_MODE7)	/* beaglebone:green:usr3 led, gpmc_a8.gpio1_24 */
+			0x30 ( PIN_OUTPUT_PULLUP | MUX_MODE7 ) /* (T12) gpmc_ad12.gpio1[12], beaglelogic user led */
+			0x54 ( PIN_OUTPUT_PULLDOWN | MUX_MODE7 ) /* (V15) gpmc_a5.gpio1[21], beaglebone:green:heartbeat led */
+			0x58 ( PIN_OUTPUT_PULLUP | MUX_MODE7 ) /* (U15) gpmc_a6.gpio1[22], beaglebone:green:mmc0 led */
+			0x5c ( PIN_OUTPUT_PULLDOWN | MUX_MODE7 ) /* (T15) gpmc_a7.gpio1[23], beaglebone:green:usr2 led */
+			0x60 ( PIN_OUTPUT_PULLUP | MUX_MODE7 ) /* (V16) gpmc_a8.gpio1[24], beaglebone:green:usr3 led */
 		>;
 	};
 
@@ -132,8 +131,8 @@
 
 	i2c1_pins: pinmux_i2c1_pins {
 		pinctrl-single,pins = <
-			0x184 (PIN_INPUT_PULLUP | MUX_MODE3 ) /* (D15) uart1_txd.I2C1_SCL */
-			0x180 (PIN_INPUT_PULLUP | MUX_MODE3 ) /* (D16) uart1_rxd.I2C1_SDA */
+			0x15c ( PIN_INPUT | MUX_MODE2 ) /* (A16) spi0_cs0.I2C1_SCL */
+			0x158 ( PIN_INPUT | MUX_MODE2 ) /* (B16) spi0_d1.I2C1_SDA */
 		>;
 	};
 
@@ -141,6 +140,8 @@
 		pinctrl-single,pins = <
 			0x178 (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_ctsn.i2c2_sda */
 			0x17c (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_rtsn.i2c2_scl */
+			0x40  (PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* (R13) gpmc_a0.gpio1[16], CFG.WP */
+			0x78  (PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* (U18) gpmc_be1n.gpio1[28], ID.WP */
 		>;
 	};
 
@@ -184,29 +185,29 @@
 	cpsw_default: cpsw_default {
 		pinctrl-single,pins = <
 			/* Slave 1 */
-			0x108 (PIN_INPUT | MUX_MODE0)		/* mii1_col.mii1_col */
-			0x10c (PIN_INPUT | MUX_MODE0)		/* mii1_crs.mii1_crs */
-			0x110 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxerr.mii1_rxerr */
-			0x114 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txen.mii1_txen */
-			0x118 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxdv.mii1_rxdv */
-			0x11c (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd3.mii1_txd3 */
-			0x120 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd2.mii1_txd2 */
-			0x124 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd1.mii1_txd1 */
-			0x128 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd0.mii1_txd0 */
-			0x12c (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_txclk.mii1_txclk */
-			0x130 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxclk.mii1_rxclk */
-			0x134 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd3.mii1_rxd3 */
-			0x138 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd2.mii1_rxd2 */
-			0x13c (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd1.mii1_rxd1 */
-			0x140 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd0.mii1_rxd0 */
+			0x108 ( PIN_INPUT | MUX_MODE0 ) /* (H16) gmii1_col.gmii1_col */
+			0x10c ( PIN_INPUT | MUX_MODE0 ) /* (H17) gmii1_crs.gmii1_crs */
+			0x110 ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (J15) gmii1_rxer.gmii1_rxer */
+			0x114 ( PIN_OUTPUT_PULLDOWN | MUX_MODE0 ) /* (J16) gmii1_txen.gmii1_txen */
+			0x118 ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (J17) gmii1_rxdv.gmii1_rxdv */
+			0x12c ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (K18) gmii1_txclk.gmii1_txclk */
+			0x130 ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (L18) gmii1_rxclk.gmii1_rxclk */
+			0x128 ( PIN_OUTPUT_PULLDOWN | MUX_MODE0 ) /* (K17) gmii1_txd0.gmii1_txd0 */
+			0x124 ( PIN_OUTPUT_PULLDOWN | MUX_MODE0 ) /* (K16) gmii1_txd1.gmii1_txd1 */
+			0x120 ( PIN_OUTPUT_PULLDOWN | MUX_MODE0 ) /* (K15) gmii1_txd2.gmii1_txd2 */
+			0x11c ( PIN_OUTPUT_PULLDOWN | MUX_MODE0 ) /* (J18) gmii1_txd3.gmii1_txd3 */
+			0x140 ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (M16) gmii1_rxd0.gmii1_rxd0 */
+			0x13c ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (L15) gmii1_rxd1.gmii1_rxd1 */
+			0x138 ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (L16) gmii1_rxd2.gmii1_rxd2 */
+			0x134 ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (L17) gmii1_rxd3.gmii1_rxd3 */
 		>;
 	};
 
 	cpsw_sleep: cpsw_sleep {
 		pinctrl-single,pins = <
 			/* Slave 1 reset value */
-			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE7)
+			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE7) /* (H16) gmii1_col.gmii1_col */
+			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE7) /* (H17) gmii1_crs.gmii1_crs */
 			0x114 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* mii1_txen.rgmii1_tctl */
 			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* mii1_rxdv.rgmii1_rctl */
 			0x11c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* mii1_txd3.rgmii1_txd3 */
@@ -273,20 +274,19 @@
 	// rs485
 	uart2_pins: pinmux_uart2_pins {
 		pinctrl-single,pins = <
-			0x150 ( PIN_INPUT | MUX_MODE1 ) /* (A17) spi0_sclk.uart2_rxd */
-			0x154 ( PIN_OUTPUT | MUX_MODE1 ) /* (B17) spi0_d0.uart2_txd */
-			0xc0 ( PIN_INPUT_PULLUP | MUX_MODE6 ) /* (U1) lcd_data8.uart2_ctsn */
-			0xc4 ( PIN_OUTPUT_PULLDOWN | MUX_MODE6 ) /* (U2) lcd_data9.uart2_rtsn */
+			0x150 ( PIN_INPUT_PULLUP | MUX_MODE1 ) /* (A17) spi0_sclk.uart2_rxd */
+			0x154 ( PIN_OUTPUT_PULLDOWN | MUX_MODE1 ) /* (B17) spi0_d0.uart2_txd */
+			0x44 ( PIN_OUTPUT_PULLDOWN | MUX_MODE7 ) /* (V14) gpmc_a1.gpio1[17], RS485 direction pin */
 		>;
 	};
 
 	// rs232
 	uart4_pins: pinmux_uart4_pins {
 		pinctrl-single,pins = <
-			0x70 ( PIN_INPUT | MUX_MODE6 ) /* (T17) gpmc_wait0.uart4_rxd */
-			0x74 ( PIN_OUTPUT | MUX_MODE6 ) /* (U17) gpmc_wpn.uart4_txd */
-			0xd0 ( PIN_INPUT | MUX_MODE6 ) /* (V2) lcd_data12.uart4_ctsn */
-			0xd4 ( PIN_OUTPUT | MUX_MODE6 ) /* (V3) lcd_data13.uart4_rtsn */
+			0x70 ( PIN_INPUT_PULLUP | MUX_MODE6 ) /* (T17) gpmc_wait0.uart4_rxd */
+			0x74 ( PIN_OUTPUT_PULLDOWN | MUX_MODE6 ) /* (U17) gpmc_wpn.uart4_txd */
+			0xd0 ( PIN_INPUT_PULLUP | MUX_MODE6 ) /* (V2) lcd_data12.uart4_ctsn */
+			0xd4 ( PIN_OUTPUT_PULLDOWN | MUX_MODE6 ) /* (V3) lcd_data13.uart4_rtsn */
 		>;
 	};
 
@@ -300,7 +300,6 @@
 		>;
 	};
 
-	// Is dit nodig?
 	eqep0_pins: pinmux_eqep0_pins {
 		pinctrl-single,pins = <
 			0x1a0 ( PIN_INPUT_PULLUP | MUX_MODE1 ) /* (B12) mcasp0_aclkr.eQEP0A_in */
@@ -362,6 +361,12 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart2_pins>;
 	status = "okay";
+
+	rs485-rts-delay = <0 0>;
+
+	rts-gpio = <&gpio1 17 1>; /*  GPIO_ACTIVE_HIGH>; */
+	rs485-rts-active-high;
+	linux,rs485-enabled-at-boot-time;
 };
 
 // rs232
@@ -430,6 +435,14 @@
 
 	status = "okay";
 	clock-frequency = <400000>;
+
+	ssd1306: oled@3c {
+		compatible = "solomon,ssd1306fb-i2c";
+		reg = <0x3c>;
+		solomon,height = <64>;
+		solomon,width = <128>;
+		solomon,page-offset = <0>;
+	};
 };
 
 &i2c2 {
@@ -437,46 +450,21 @@
 	pinctrl-0 = <&i2c2_pins>;
 
 	status = "okay";
-	clock-frequency = <100000>;
+	clock-frequency = <400000>;
 
-	cape_eeprom0: cape_eeprom0@54 {
-		compatible = "at,24c256";
-		reg = <0x54>;
-		#address-cells = <1>;
-		#size-cells = <1>;
-		cape0_data: cape_data@0 {
-			reg = <0 0x100>;
-		};
-	};
-
-	cape_eeprom1: cape_eeprom1@55 {
-		compatible = "at,24c256";
-		reg = <0x55>;
-		#address-cells = <1>;
-		#size-cells = <1>;
-		cape1_data: cape_data@0 {
-			reg = <0 0x100>;
-		};
-	};
-
-	cape_eeprom2: cape_eeprom2@56 {
+	bernardo_eeprom: beaglelogic_eeprom@56 {
 		compatible = "at,24c256";
 		reg = <0x56>;
 		#address-cells = <1>;
 		#size-cells = <1>;
-		cape2_data: cape_data@0 {
+		bernardo_data: cape_data@0 {
 			reg = <0 0x100>;
 		};
 	};
 
-	cape_eeprom3: cape_eeprom3@57 {
-		compatible = "at,24c256";
-		reg = <0x57>;
-		#address-cells = <1>;
-		#size-cells = <1>;
-		cape3_data: cape_data@0 {
-			reg = <0 0x100>;
-		};
+	bernardortc: bq32000@68 {
+		compatible = "ti,bq32000";
+		reg = <0x68>;
 	};
 };
 

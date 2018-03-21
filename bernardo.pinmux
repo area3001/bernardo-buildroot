@@ -171,8 +171,8 @@
 				"requirementId": "MyGPIO3",
 				"interfacePin": "gpio[6]"
 			},
-			"D15": {
-				"nameDecoratorText": "D15",
+			"A16": {
+				"nameDecoratorText": "A16",
 				"assignedToName": "I2C1_SCL",
 				"errorText": "",
 				"warningText": "",
@@ -185,8 +185,8 @@
 				"requirementId": "MyI2C1",
 				"interfacePin": "SCL"
 			},
-			"D16": {
-				"nameDecoratorText": "D16",
+			"B16": {
+				"nameDecoratorText": "B16",
 				"assignedToName": "I2C1_SDA",
 				"errorText": "",
 				"warningText": "",
@@ -902,7 +902,7 @@
 		},
 		"powerDomainSettings": {},
 		"powerDomainSettingsEnabled": false,
-		"isLoad": false,
+		"isLoad": true,
 		"isBoard": false,
 		"groupRequirements": {
 			"ADC": {
@@ -4106,7 +4106,7 @@
 								"used": true,
 								"solution": {
 									"nameDecoratorText": "I2C1_SCL",
-									"assignedToName": "D15",
+									"assignedToName": "A16",
 									"errorText": "",
 									"warningText": "",
 									"errorDetailsText": [],
@@ -4126,7 +4126,7 @@
 									"warningCount": 0,
 									"nonSolverErrorCount": 0
 								},
-								"assignedToName": "D15",
+								"assignedToName": "A16",
 								"removable": false,
 								"type": "Single",
 								"name": "SCL",
@@ -4144,7 +4144,7 @@
 								"used": true,
 								"solution": {
 									"nameDecoratorText": "I2C1_SDA",
-									"assignedToName": "D16",
+									"assignedToName": "B16",
 									"errorText": "",
 									"warningText": "",
 									"errorDetailsText": [],
@@ -4164,7 +4164,7 @@
 									"warningCount": 0,
 									"nonSolverErrorCount": 0
 								},
-								"assignedToName": "D16",
+								"assignedToName": "B16",
 								"removable": false,
 								"type": "Single",
 								"name": "SDA",
@@ -4189,7 +4189,7 @@
 							"errorCount": 0,
 							"warningCount": 0,
 							"nonSolverErrorCount": 0,
-							"ioSet": "I2C1_IOSet_3"
+							"ioSet": "I2C1_IOSet_4"
 						},
 						"voltageSolution": {
 							"nameDecoratorText": "",
