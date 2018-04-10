@@ -101,6 +101,16 @@
 		interrupts = <22>, <23>, <24>;
 		interrupt-names = "from_bl_1", "to_bl", "from_bl_2";
 	};
+
+    onewire@0 {
+    	compatible = "w1-gpio";
+    	pinctrl-names = "default";
+    	pinctrl-0 = <&w1_pins>;
+
+    	gpios = <&gpio1 29 1>;
+
+    	status = "okay";
+    };
 };
 
 &am33xx_pinmux {
@@ -256,6 +266,12 @@
 		>;
 	};
 
+	w1_pins: pinmux_w1_pins {
+		pinctrl-single,pins = <
+			0x7c ( PIN_INPUT_PULLDOWN | MUX_MODE7 ) /* (V6) gpmc_csn0.gpio1[29], 1 wire pin (TODO) */
+		>;
+	};
+
 	uart0_pins: pinmux_uart0_pins {
 		pinctrl-single,pins = <
 			0x170 ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (E15) uart0_rxd.uart0_rxd */
@@ -263,13 +279,12 @@
 		>;
 	};
 
-	// conflict with i2c1
-	//uart1_pins: pinmux_uart1_pins {
-	//	pinctrl-single,pins = <
-	//		0x180 ( PIN_INPUT_PULLUP | MUX_MODE0 ) /* (D16) uart1_rxd.uart1_rxd */
-	//		0x184 ( PIN_OUTPUT_PULLDOWN | MUX_MODE0 ) /* (D15) uart1_txd.uart1_txd */
-	//	>;
-	//};
+	can1_pins: pinmux_can1_pins {
+		pinctrl-single,pins = <
+			0x184 ( PIN_INPUT_PULLUP | MUX_MODE2 ) /* (D15) uart1_txd.dcan1_rx */
+			0x180 ( PIN_OUTPUT | MUX_MODE2 ) /* (D16) uart1_rxd.dcan1_tx */
+		>;
+	};
 
 	// rs485
 	uart2_pins: pinmux_uart2_pins {
@@ -287,6 +302,13 @@
 			0x74 ( PIN_OUTPUT_PULLDOWN | MUX_MODE6 ) /* (U17) gpmc_wpn.uart4_txd */
 			0xd0 ( PIN_INPUT_PULLUP | MUX_MODE6 ) /* (V2) lcd_data12.uart4_ctsn */
 			0xd4 ( PIN_OUTPUT_PULLDOWN | MUX_MODE6 ) /* (V3) lcd_data13.uart4_rtsn */
+		>;
+	};
+
+	uart5_pins: pinmux_uart5_pins {
+		pinctrl-single,pins = <
+			0xc4 ( PIN_INPUT_PULLUP | MUX_MODE4 ) /* (U2) lcd_data9.uart5_rxd */
+			0xc0 ( PIN_OUTPUT_PULLDOWN | MUX_MODE4 ) /* (U1) lcd_data8.uart5_txd */
 		>;
 	};
 
@@ -349,12 +371,11 @@
 	};
 };
 
-// conflicts with i2c1
-//&uart1 {
-//	pinctrl-names = "default";
-//	pinctrl-0 = <&uart1_pins>;
-//	status = "okay";
-//};
+&dcan1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&can1_pins>;
+	status = "okay";
+};
 
 // rs485
 &uart2 {
@@ -373,6 +394,12 @@
 &uart4 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart4_pins>;
+	status = "okay";
+};
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart5_pins>;
 	status = "okay";
 };
 

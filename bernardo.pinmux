@@ -1,5 +1,5 @@
 {
-	"boardId": "bernardo",
+	"boardId": "undefined",
 	"deviceId": "AM335x",
 	"partId": "ID_500",
 	"packageId": "ID_0",
@@ -15,7 +15,7 @@
 			"errorCount": 0,
 			"warningCount": 0,
 			"nonSolverErrorCount": 0,
-			"gpioPinsUsed": 70,
+			"gpioPinsUsed": 75,
 			"gpioPinsTotal": 114
 		},
 		"nonSolverSolution": {
@@ -31,6 +31,34 @@
 		},
 		"version": "2.0.0",
 		"devicePinMap": {
+			"D15": {
+				"nameDecoratorText": "D15",
+				"assignedToName": "dcan1_rx",
+				"errorText": "",
+				"warningText": "",
+				"errorDetailsText": [],
+				"warningDetailsText": [],
+				"errorCount": 0,
+				"warningCount": 0,
+				"nonSolverErrorCount": 0,
+				"requirementName": "can1",
+				"requirementId": "MyDCAN1",
+				"interfacePin": "rx"
+			},
+			"D16": {
+				"nameDecoratorText": "D16",
+				"assignedToName": "dcan1_tx",
+				"errorText": "",
+				"warningText": "",
+				"errorDetailsText": [],
+				"warningDetailsText": [],
+				"errorCount": 0,
+				"warningCount": 0,
+				"nonSolverErrorCount": 0,
+				"requirementName": "can1",
+				"requirementId": "MyDCAN1",
+				"interfacePin": "tx"
+			},
 			"B12": {
 				"nameDecoratorText": "B12",
 				"assignedToName": "eQEP0A_in",
@@ -184,6 +212,20 @@
 				"requirementName": "user_leds",
 				"requirementId": "MyGPIO2",
 				"interfacePin": "gpio[28]"
+			},
+			"V6": {
+				"nameDecoratorText": "V6",
+				"assignedToName": "gpio1[29]",
+				"errorText": "",
+				"warningText": "",
+				"errorDetailsText": [],
+				"warningDetailsText": [],
+				"errorCount": 0,
+				"warningCount": 0,
+				"nonSolverErrorCount": 0,
+				"requirementName": "user_leds",
+				"requirementId": "MyGPIO2",
+				"interfacePin": "gpio[29]"
 			},
 			"C15": {
 				"nameDecoratorText": "C15",
@@ -1053,6 +1095,34 @@
 				"requirementId": "MyUART10",
 				"interfacePin": "txd"
 			},
+			"U2": {
+				"nameDecoratorText": "U2",
+				"assignedToName": "uart5_rxd",
+				"errorText": "",
+				"warningText": "",
+				"errorDetailsText": [],
+				"warningDetailsText": [],
+				"errorCount": 0,
+				"warningCount": 0,
+				"nonSolverErrorCount": 0,
+				"requirementName": "uart5",
+				"requirementId": "MyUART13",
+				"interfacePin": "rxd"
+			},
+			"U1": {
+				"nameDecoratorText": "U1",
+				"assignedToName": "uart5_txd",
+				"errorText": "",
+				"warningText": "",
+				"errorDetailsText": [],
+				"warningDetailsText": [],
+				"errorCount": 0,
+				"warningCount": 0,
+				"nonSolverErrorCount": 0,
+				"requirementName": "uart5",
+				"requirementId": "MyUART13",
+				"interfacePin": "txd"
+			},
 			"M15": {
 				"nameDecoratorText": "M15",
 				"assignedToName": "USB0_CE",
@@ -1253,7 +1323,8 @@
 					"warningDetailsText": [],
 					"errorCount": 0,
 					"warningCount": 0,
-					"nonSolverErrorCount": 0
+					"nonSolverErrorCount": 0,
+					"gpioPinsUsed": 2
 				},
 				"nonSolverSolution": {
 					"nameDecoratorText": "",
@@ -1266,8 +1337,154 @@
 					"warningCount": 0,
 					"nonSolverErrorCount": 0
 				},
-				"requirementsNameIndex": 1,
-				"requirements": [],
+				"requirementsNameIndex": 2,
+				"requirements": [
+					{
+						"used": true,
+						"solution": {
+							"nameDecoratorText": "",
+							"assignedToName": "",
+							"errorText": "",
+							"warningText": "",
+							"errorDetailsText": [],
+							"warningDetailsText": [],
+							"errorCount": 0,
+							"warningCount": 0,
+							"nonSolverErrorCount": 0,
+							"gpioPinsUsed": 2
+						},
+						"nonSolverSolution": {
+							"nameDecoratorText": "",
+							"assignedToName": "",
+							"errorText": "",
+							"warningText": "",
+							"errorDetailsText": [],
+							"warningDetailsText": [],
+							"errorCount": 0,
+							"warningCount": 0,
+							"nonSolverErrorCount": 0
+						},
+						"selectedInstance": "DCAN1",
+						"selectedVoltage": "Any",
+						"selectedUseCase": "DCAN_0",
+						"pinRequirements": [
+							{
+								"used": true,
+								"solution": {
+									"nameDecoratorText": "dcan1_rx",
+									"assignedToName": "D15",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"nonSolverSolution": {
+									"nameDecoratorText": "",
+									"assignedToName": "",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"assignedToName": "D15",
+								"removable": false,
+								"type": "Single",
+								"name": "rx",
+								"interfacePinName": "rx",
+								"configurables": {
+									"pu_pd": {
+										"name": "nopull",
+										"displayName": "No Pull",
+										"value": "N/A"
+									},
+									"rx": true
+								}
+							},
+							{
+								"used": true,
+								"solution": {
+									"nameDecoratorText": "dcan1_tx",
+									"assignedToName": "D16",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"nonSolverSolution": {
+									"nameDecoratorText": "",
+									"assignedToName": "",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"assignedToName": "D16",
+								"removable": false,
+								"type": "Single",
+								"name": "tx",
+								"interfacePinName": "tx",
+								"configurables": {
+									"pu_pd": {
+										"name": "nopull",
+										"displayName": "No Pull",
+										"value": "N/A"
+									},
+									"rx": false
+								}
+							}
+						],
+						"peripheralSolution": {
+							"nameDecoratorText": "",
+							"assignedToName": "DCAN1",
+							"errorText": "",
+							"warningText": "",
+							"errorDetailsText": [],
+							"warningDetailsText": [],
+							"errorCount": 0,
+							"warningCount": 0,
+							"nonSolverErrorCount": 0,
+							"ioSet": "DCAN1_IOSet_2"
+						},
+						"voltageSolution": {
+							"nameDecoratorText": "",
+							"assignedToName": "",
+							"errorText": "",
+							"warningText": "",
+							"errorDetailsText": [],
+							"warningDetailsText": [],
+							"errorCount": 0,
+							"warningCount": 0,
+							"nonSolverErrorCount": 0
+						},
+						"isNameValid": true,
+						"assignedToName": "",
+						"id": "MyDCAN1",
+						"name": "can1",
+						"interfaceName": "DCAN",
+						"pinConfigurablesHeader": {
+							"pu_pd": {
+								"name": "nopull",
+								"displayName": "No Pull",
+								"value": "N/A"
+							},
+							"rx": false
+						},
+						"configurables": {},
+						"requirementNameErrorMessage": ""
+					}
+				],
 				"name": "DCAN",
 				"id": "DCAN"
 			},
@@ -1738,7 +1955,7 @@
 					"errorCount": 0,
 					"warningCount": 0,
 					"nonSolverErrorCount": 0,
-					"gpioPinsUsed": 10
+					"gpioPinsUsed": 11
 				},
 				"nonSolverSolution": {
 					"nameDecoratorText": "",
@@ -1765,7 +1982,7 @@
 							"errorCount": 0,
 							"warningCount": 0,
 							"nonSolverErrorCount": 0,
-							"gpioPinsUsed": 9
+							"gpioPinsUsed": 10
 						},
 						"nonSolverSolution": {
 							"nameDecoratorText": "",
@@ -2885,10 +3102,10 @@
 								}
 							},
 							{
-								"used": false,
+								"used": true,
 								"solution": {
-									"nameDecoratorText": "",
-									"assignedToName": "",
+									"nameDecoratorText": "gpio1[29]",
+									"assignedToName": "V6",
 									"errorText": "",
 									"warningText": "",
 									"errorDetailsText": [],
@@ -2908,15 +3125,15 @@
 									"warningCount": 0,
 									"nonSolverErrorCount": 0
 								},
-								"assignedToName": "Any",
+								"assignedToName": "V6",
 								"removable": false,
 								"type": "Single",
 								"name": "gpio[29]",
 								"interfacePinName": "gpio[29]",
 								"configurables": {
 									"pu_pd": {
-										"name": "nopull",
-										"displayName": "No Pull",
+										"name": "pd",
+										"displayName": "Pull Down",
 										"value": "N/A"
 									},
 									"rx": true
@@ -8433,7 +8650,7 @@
 					"errorCount": 0,
 					"warningCount": 0,
 					"nonSolverErrorCount": 0,
-					"gpioPinsUsed": 8
+					"gpioPinsUsed": 10
 				},
 				"nonSolverSolution": {
 					"nameDecoratorText": "",
@@ -8446,7 +8663,7 @@
 					"warningCount": 0,
 					"nonSolverErrorCount": 0
 				},
-				"requirementsNameIndex": 11,
+				"requirementsNameIndex": 15,
 				"requirements": [
 					{
 						"used": true,
@@ -8946,6 +9163,151 @@
 						"assignedToName": "",
 						"id": "MyUART10",
 						"name": "uart0",
+						"interfaceName": "UART",
+						"pinConfigurablesHeader": {
+							"pu_pd": {
+								"name": "nopull",
+								"displayName": "No Pull",
+								"value": "N/A"
+							},
+							"rx": false
+						},
+						"configurables": {},
+						"requirementNameErrorMessage": ""
+					},
+					{
+						"used": true,
+						"solution": {
+							"nameDecoratorText": "",
+							"assignedToName": "",
+							"errorText": "",
+							"warningText": "",
+							"errorDetailsText": [],
+							"warningDetailsText": [],
+							"errorCount": 0,
+							"warningCount": 0,
+							"nonSolverErrorCount": 0,
+							"gpioPinsUsed": 2
+						},
+						"nonSolverSolution": {
+							"nameDecoratorText": "",
+							"assignedToName": "",
+							"errorText": "",
+							"warningText": "",
+							"errorDetailsText": [],
+							"warningDetailsText": [],
+							"errorCount": 0,
+							"warningCount": 0,
+							"nonSolverErrorCount": 0
+						},
+						"selectedInstance": "UART5",
+						"selectedVoltage": "Any",
+						"selectedUseCase": "UART_1",
+						"pinRequirements": [
+							{
+								"used": true,
+								"solution": {
+									"nameDecoratorText": "uart5_rxd",
+									"assignedToName": "U2",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"nonSolverSolution": {
+									"nameDecoratorText": "",
+									"assignedToName": "",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"assignedToName": "U2",
+								"removable": false,
+								"type": "Single",
+								"name": "rxd",
+								"interfacePinName": "rxd",
+								"configurables": {
+									"pu_pd": {
+										"name": "nopull",
+										"displayName": "No Pull",
+										"value": "N/A"
+									},
+									"rx": true
+								}
+							},
+							{
+								"used": true,
+								"solution": {
+									"nameDecoratorText": "uart5_txd",
+									"assignedToName": "U1",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"nonSolverSolution": {
+									"nameDecoratorText": "",
+									"assignedToName": "",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"assignedToName": "U1",
+								"removable": false,
+								"type": "Single",
+								"name": "txd",
+								"interfacePinName": "txd",
+								"configurables": {
+									"pu_pd": {
+										"name": "nopull",
+										"displayName": "No Pull",
+										"value": "N/A"
+									},
+									"rx": false
+								}
+							}
+						],
+						"peripheralSolution": {
+							"nameDecoratorText": "",
+							"assignedToName": "UART5",
+							"errorText": "",
+							"warningText": "",
+							"errorDetailsText": [],
+							"warningDetailsText": [],
+							"errorCount": 0,
+							"warningCount": 0,
+							"nonSolverErrorCount": 0,
+							"ioSet": "UART5_IOSet_4"
+						},
+						"voltageSolution": {
+							"nameDecoratorText": "",
+							"assignedToName": "",
+							"errorText": "",
+							"warningText": "",
+							"errorDetailsText": [],
+							"warningDetailsText": [],
+							"errorCount": 0,
+							"warningCount": 0,
+							"nonSolverErrorCount": 0
+						},
+						"isNameValid": true,
+						"assignedToName": "",
+						"id": "MyUART13",
+						"name": "uart5",
 						"interfaceName": "UART",
 						"pinConfigurablesHeader": {
 							"pu_pd": {
