@@ -1,3 +1,4 @@
 source "$BR2_EXTERNAL_BERNARDO_PATH/package/beaglelogic/Config.in"
 source "$BR2_EXTERNAL_BERNARDO_PATH/package/inputevent/Config.in"
 source "$BR2_EXTERNAL_BERNARDO_PATH/package/uart-echo-test/Config.in"
+source "$BR2_EXTERNAL_BERNARDO_PATH/package/uart-enable-rs485/Config.in"

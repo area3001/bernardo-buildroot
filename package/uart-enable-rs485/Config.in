@@ -1,0 +1,4 @@
+config BR2_PACKAGE_UART_ENABLE_RS485
+	bool "uart-enable-rs485"
+	help
+	  Enable RS485 mode on a uart
