@@ -15,7 +15,7 @@
 			"errorCount": 0,
 			"warningCount": 0,
 			"nonSolverErrorCount": 0,
-			"gpioPinsUsed": 75,
+			"gpioPinsUsed": 76,
 			"gpioPinsTotal": 114
 		},
 		"nonSolverSolution": {
@@ -1122,6 +1122,20 @@
 				"requirementName": "uart5",
 				"requirementId": "MyUART13",
 				"interfacePin": "txd"
+			},
+			"T5": {
+				"nameDecoratorText": "T5",
+				"assignedToName": "uart5_rtsn",
+				"errorText": "",
+				"warningText": "",
+				"errorDetailsText": [],
+				"warningDetailsText": [],
+				"errorCount": 0,
+				"warningCount": 0,
+				"nonSolverErrorCount": 0,
+				"requirementName": "uart5",
+				"requirementId": "MyUART13",
+				"interfacePin": "rtsn"
 			},
 			"M15": {
 				"nameDecoratorText": "M15",
@@ -3725,7 +3739,7 @@
 									"warningCount": 0,
 									"nonSolverErrorCount": 0
 								},
-								"assignedToName": "Any",
+								"assignedToName": "T5",
 								"removable": false,
 								"type": "Single",
 								"name": "gpio[11]",
@@ -8650,7 +8664,7 @@
 					"errorCount": 0,
 					"warningCount": 0,
 					"nonSolverErrorCount": 0,
-					"gpioPinsUsed": 10
+					"gpioPinsUsed": 11
 				},
 				"nonSolverSolution": {
 					"nameDecoratorText": "",
@@ -8725,8 +8739,8 @@
 								"interfacePinName": "rxd",
 								"configurables": {
 									"pu_pd": {
-										"name": "pu",
-										"displayName": "Pull Up",
+										"name": "nopull",
+										"displayName": "No Pull",
 										"value": "N/A"
 									},
 									"rx": true
@@ -8763,8 +8777,8 @@
 								"interfacePinName": "txd",
 								"configurables": {
 									"pu_pd": {
-										"name": "pd",
-										"displayName": "Pull Down",
+										"name": "nopull",
+										"displayName": "No Pull",
 										"value": "N/A"
 									},
 									"rx": false
@@ -9187,7 +9201,7 @@
 							"errorCount": 0,
 							"warningCount": 0,
 							"nonSolverErrorCount": 0,
-							"gpioPinsUsed": 2
+							"gpioPinsUsed": 3
 						},
 						"nonSolverSolution": {
 							"nameDecoratorText": "",
@@ -9202,7 +9216,7 @@
 						},
 						"selectedInstance": "UART5",
 						"selectedVoltage": "Any",
-						"selectedUseCase": "UART_1",
+						"selectedUseCase": "UART_2",
 						"pinRequirements": [
 							{
 								"used": true,
@@ -9279,6 +9293,82 @@
 									},
 									"rx": false
 								}
+							},
+							{
+								"used": false,
+								"solution": {
+									"nameDecoratorText": "",
+									"assignedToName": "",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"nonSolverSolution": {
+									"nameDecoratorText": "",
+									"assignedToName": "",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"assignedToName": "V4",
+								"removable": false,
+								"type": "Single",
+								"name": "ctsn",
+								"interfacePinName": "ctsn",
+								"configurables": {
+									"pu_pd": {
+										"name": "nopull",
+										"displayName": "No Pull",
+										"value": "N/A"
+									},
+									"rx": true
+								}
+							},
+							{
+								"used": true,
+								"solution": {
+									"nameDecoratorText": "uart5_rtsn",
+									"assignedToName": "T5",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"nonSolverSolution": {
+									"nameDecoratorText": "",
+									"assignedToName": "",
+									"errorText": "",
+									"warningText": "",
+									"errorDetailsText": [],
+									"warningDetailsText": [],
+									"errorCount": 0,
+									"warningCount": 0,
+									"nonSolverErrorCount": 0
+								},
+								"assignedToName": "T5",
+								"removable": false,
+								"type": "Single",
+								"name": "rtsn",
+								"interfacePinName": "rtsn",
+								"configurables": {
+									"pu_pd": {
+										"name": "nopull",
+										"displayName": "No Pull",
+										"value": "N/A"
+									},
+									"rx": false
+								}
 							}
 						],
 						"peripheralSolution": {
@@ -9291,7 +9381,7 @@
 							"errorCount": 0,
 							"warningCount": 0,
 							"nonSolverErrorCount": 0,
-							"ioSet": "UART5_IOSet_4"
+							"ioSet": "UART5_IOSet_10"
 						},
 						"voltageSolution": {
 							"nameDecoratorText": "",

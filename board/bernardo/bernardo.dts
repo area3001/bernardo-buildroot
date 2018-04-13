@@ -102,15 +102,15 @@
 		interrupt-names = "from_bl_1", "to_bl", "from_bl_2";
 	};
 
-    onewire@0 {
-    	compatible = "w1-gpio";
-    	pinctrl-names = "default";
-    	pinctrl-0 = <&w1_pins>;
+	onewire@0 {
+		compatible = "w1-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&w1_pins>;
 
-    	gpios = <&gpio1 29 1>;
+		gpios = <&gpio1 29 1>;
 
-    	status = "okay";
-    };
+		status = "okay";
+	};
 };
 
 &am33xx_pinmux {
@@ -286,12 +286,11 @@
 		>;
 	};
 
-	// rs485
+	// ttl
 	uart2_pins: pinmux_uart2_pins {
 		pinctrl-single,pins = <
 			0x150 ( PIN_INPUT_PULLUP | MUX_MODE1 ) /* (A17) spi0_sclk.uart2_rxd */
 			0x154 ( PIN_OUTPUT_PULLDOWN | MUX_MODE1 ) /* (B17) spi0_d0.uart2_txd */
-			0x44 ( PIN_OUTPUT_PULLDOWN | MUX_MODE7 ) /* (V14) gpmc_a1.gpio1[17], RS485 direction pin */
 		>;
 	};
 
@@ -305,10 +304,14 @@
 		>;
 	};
 
-	uart5_pins: pinmux_uart5_pins {
+	// rs485
+	uart5_pins_default: uart5_pins_default {
 		pinctrl-single,pins = <
 			0xc4 ( PIN_INPUT_PULLUP | MUX_MODE4 ) /* (U2) lcd_data9.uart5_rxd */
 			0xc0 ( PIN_OUTPUT_PULLDOWN | MUX_MODE4 ) /* (U1) lcd_data8.uart5_txd */
+			0xdc ( PIN_OUTPUT_PULLDOWN | MUX_MODE6 ) /* (T5) lcd_data15.uart5_rtsn */
+			// configure T5 as GPIO when using the old omap_serial driver
+			// 0xdc ( PIN_OUTPUT_PULLDOWN | MUX_MODE7 ) /* (T5) lcd_data15.gpio0[11] */
 		>;
 	};
 
@@ -377,17 +380,11 @@
 	status = "okay";
 };
 
-// rs485
+// ttl
 &uart2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart2_pins>;
 	status = "okay";
-
-	rs485-rts-delay = <0 0>;
-
-	rts-gpio = <&gpio1 17 1>; /*  GPIO_ACTIVE_HIGH>; */
-	rs485-rts-active-high;
-	linux,rs485-enabled-at-boot-time;
 };
 
 // rs232
@@ -397,6 +394,22 @@
 	status = "okay";
 };
 
+// rs485 (omap_serial driver)
+// &uart5 {
+//	pinctrl-names = "default";
+//	pinctrl-0 = <&uart5_pins>;
+//	status = "okay";
+//
+//	rs485-rts-delay = <0 0>;
+//
+//	rts-gpio = <&gpio0 11 1>; /*  GPIO_ACTIVE_HIGH>; */
+//	rs485-rts-active-high;
+//	linux,rs485-enabled-at-boot-time;
+//};
+
+// rs485 (8250 serial driver)
+// use ioctl calls to put driver in rs485 mode
+// see: Documentation/serial/serial-rs485.txt
 &uart5 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart5_pins>;
