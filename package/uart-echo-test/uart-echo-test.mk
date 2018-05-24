@@ -4,15 +4,15 @@
 #
 ################################################################################
 
-TARGET_CFLAGS += -c -Wall -O2
+CFLAGS = $(TARGET_CFLAGS) -c -Wall -O2
 
 define UART_ECHO_TEST_BUILD_CMDS
-	$(TARGET_CC) $(TARGET_CFLAGS) \
+	$(TARGET_CC) $(CFLAGS) \
 		$(UART_ECHO_TEST_PKGDIR)/main.c -o $(@D)/uart-echo-test.o
 
 	$(TARGET_CC) $(@D)/uart-echo-test.o -o $(@D)/uart-echo-test
 
-	$(TARGET_CC) $(TARGET_CFLAGS) \
+	$(TARGET_CC) $(CFLAGS) \
 		$(UART_ECHO_TEST_PKGDIR)/send.c -o $(@D)/uart-send-test.o
 
 	$(TARGET_CC) $(@D)/uart-send-test.o -o $(@D)/uart-send-test

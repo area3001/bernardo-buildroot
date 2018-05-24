@@ -305,7 +305,7 @@
 	};
 
 	// rs485
-	uart5_pins_default: uart5_pins_default {
+	uart5_pins: pinmux_uart5_pins {
 		pinctrl-single,pins = <
 			0xc4 ( PIN_INPUT_PULLUP | MUX_MODE4 ) /* (U2) lcd_data9.uart5_rxd */
 			0xc0 ( PIN_OUTPUT_PULLDOWN | MUX_MODE4 ) /* (U1) lcd_data8.uart5_txd */

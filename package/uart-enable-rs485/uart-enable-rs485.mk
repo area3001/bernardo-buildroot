@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-TARGET_CFLAGS += -c -Wall -O2
+CFLAGS = $(TARGET_CFLAGS) -c -Wall -O2
 
 define UART_ENABLE_RS485_BUILD_CMDS
-	$(TARGET_CC) $(TARGET_CFLAGS) \
+	$(TARGET_CC) $(CFLAGS) \
 		$(UART_ENABLE_RS485_PKGDIR)/main.c -o $(@D)/uart-enable-rs485.o
 
 	$(TARGET_CC) $(@D)/uart-enable-rs485.o -o $(@D)/uart-enable-rs485

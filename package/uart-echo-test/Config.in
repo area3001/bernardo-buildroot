@@ -1,0 +1,4 @@
+config BR2_PACKAGE_UART_ECHO_TEST
+	bool "uart-echo-test"
+	help
+	  Uart echo test
